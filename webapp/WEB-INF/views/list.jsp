@@ -28,14 +28,14 @@
 			<td>${personVo.company }</td>
 		</tr>
 		<tr>
-			<td><a href="/phonebook5/updateForm?personId=${personVo.personId }">수정</a></td>
-			<td><a href="/phonebook5/delete?personId=${personVo.personId }">삭제</a></td>
+			<td><a href="${pageContext.request.contextPath }/updateForm2?personId=${personVo.personId }">수정</a></td>
+			<td><a href="${pageContext.request.contextPath }/delete?personId=${personVo.personId }">삭제</a></td>
 		</tr>
 	</table>
 	<br>
 	</c:forEach>
 	
-	<a href="/phonebook5/writeForm">[추가 등록하기]</a>
+	<a href="${pageContext.request.contextPath }/writeForm">[추가 등록하기]</a>
 
 
 </body>

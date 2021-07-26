@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,7 @@ public class PhoneController {
 		model.addAttribute("personList", personList);
 		
 		//ModelAndView 에서 View 공간
-		return "/WEB-INF/views/list.jsp";   // DispatcherServlet야 WEB-INF/views/test.jsp에 포워드해라!!
+		return "list";   // DispatcherServlet야 WEB-INF/views/test.jsp에 포워드해라!!
 	}
 	
 	
@@ -51,7 +52,7 @@ public class PhoneController {
 	public String writeForm() {
 		System.out.println("[PhoneController.writeForm]");
 		
-		return "/WEB-INF/views/writeForm.jsp";
+		return "writeForm";
 	}
 	
 	//http://localhost:8088/phonebook5/write?name=정우성&hp=010-0000-0000&company=02-1234-1234
@@ -81,6 +82,18 @@ public class PhoneController {
 	}
 	
 	
+	//쓰기2
+	//파라미터로 받을때
+	@RequestMapping(value = "/write2", method = {RequestMethod.GET, RequestMethod.POST})
+	public String write2(@RequestParam("name") String name,
+						 @RequestParam("hp") String hp,
+						 @RequestParam("company") String company ) {
+		System.out.println("[PhoneController.write2]");
+		
+		int count = phoneDao.personInsert2(name, hp, company);
+		
+		return "redirect:/list";
+	}
 	
 	//삭제
 	@RequestMapping(value="/delete", method = {RequestMethod.GET , RequestMethod.POST}) 
@@ -94,7 +107,7 @@ public class PhoneController {
 		//PhoneDao phoneDao = new PhoneDao();
 		
 		//Dao 메소드 이용
-		//int count = phoneDao.personDelete(personId);
+		int count = phoneDao.personDelete(personId);
 		
 		//Model은 없고 View ==> 리다이렉트
 		return "redirect:/list";
@@ -106,27 +119,43 @@ public class PhoneController {
 	public String updateForm(Model model, @RequestParam("personId") int personId) {
 		System.out.println("[PhoneController.updateForm]");
 		
+		//확인
+		System.out.println(personId);
+		
 		// Dao 사용
 		//PhoneDao phoneDao = new PhoneDao();
 
 		// Dao의 메소드로 수정할 1명의 데이터 가져오기
-		//PersonVo personVo = phoneDao.getPerson(personId);
+		PersonVo personVo = phoneDao.getPerson(personId);
 		
-		//확인
-		System.out.println(personId);
 
 		// 그림에서 4번 ModelAndView 에서 Model 공간에 담기 --> 디스패처서블릿에 전달된다 --> request의 attribute
 		// 영역에 넣는다.
-		//model.addAttribute("personList", personVo);
+		model.addAttribute("personList", personVo);
 
-		// ModelAndView 에서 View 공간
-		return "/WEB-INF/views/updateForm.jsp"; // DispatcherServlet야 WEB-INF/views/test.jsp에 포워드해라!!
+		// ModelAndView 에서 View 공간  --> jsp파일
+		return "updateForm"; // DispatcherServlet야 WEB-INF/views/test.jsp에 포워드해라!!
 		
 	}
 	
 	
+	//수정폼2
+	@RequestMapping(value="/updateForm2", method = {RequestMethod.GET, RequestMethod.POST})
+	public String updateForm2(Model model, @RequestParam("personId") int personId) {
+		System.out.println("[PhoneController.updateForm2]");
+		System.out.println(personId);
+		
+		Map<String, Object> personMap = phoneDao.getPerson2(personId);
+		System.out.println(personMap);
+		
+		model.addAttribute("pMap", personMap);
+		
+		//view  --> jsp파일
+		return "updateForm2";
+	}
+	
 	//수정
-	@RequestMapping(value="update", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
 	public String update(@ModelAttribute PersonVo personVo) {
 		System.out.println("[PhoneController.update]");
 		
@@ -139,14 +168,30 @@ public class PhoneController {
 		//PhoneDao phoneDao = new PhoneDao();
 		
 		// Dao 메소드 이용해서 데이터 업데이트
-		//int count = phoneDao.personUpdate(personVo);
+		int count = phoneDao.personUpdate(personVo);
 
 		// view --> 리다이렉트 Model사용안했음
 		return "redirect:/list";
 		
-	
 	}
 	
+	
+	//수정2
+	@RequestMapping(value="/update2", method = {RequestMethod.GET, RequestMethod.POST})
+	public String update2(@RequestParam("name") String name,
+						  @RequestParam("hp") String hp,
+						  @RequestParam("company") String company,
+						  @RequestParam("personId") int personId
+						) {
+		
+		System.out.println("[PhoneController.update2]");
+		
+		phoneDao.personUpdate2(name, hp, company, personId);
+		
+		System.out.println();
+		
+		return "redirect:/list";
+	}
 	
 //	  파라미터를 1개씩 받을때
 //	쓰기
@@ -210,7 +255,7 @@ public class PhoneController {
 	public String test() {
 		System.out.println("test");
 		
-		return "WEB-INF/views/test.jsp";  // DispatcherServlet야 WEB-INF/views/test.jsp에 포워드해라!!
+		return "test";  // DispatcherServlet야 WEB-INF/views/test.jsp에 포워드해라!!
 
 	}
 	

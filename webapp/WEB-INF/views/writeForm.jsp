@@ -15,7 +15,7 @@
 
 <!-- /http://localhost:8088/phonebook5/write?name=정우성&hp=010-0000-0000&company=02-1234-1234 -->
 
-	<form action="/phonebook5/write" method="get">
+	<form action="${pageContext.request.contextPath }/write2" method="get">
 		<!-- name="hp"에 name은 문법의 name이기 때문에 hp로 하면안된다. -->
 		
 		이름(name): <input type="text" name="name" value=""><br> 
